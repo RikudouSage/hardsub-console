@@ -1,6 +1,6 @@
 # Hardsub Konzole
 Jednoduchý program pro tvorbu mkv hardsubů. Stačí vybrat původní video (mkv formát), vložit titulky (ass nebo 
-srt formát), zvolit složku pro uložení videa, název videa a bitrate (doplní se automaticky z původního videao) a 
+srt formát), zvolit složku pro uložení videa, název videa a bitrate (doplní se automaticky z původního videa) a 
 kliknout na tlačítko Vytvořit hardsub. Pro stažení klikněte 
 [sem](https://github.com/RikudouSage/hardsub-konzole/releases).
 ## Kompilace
