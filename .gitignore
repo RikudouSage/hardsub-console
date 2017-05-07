@@ -1,0 +1,5 @@
+/bin/*
+!/bin/ffmpeg.exe
+/HardsubKonzole.exe
+/source/build-*
+/source/harsdub/*.pro.*

@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>DB.js</file>
+    </qresource>
+    <qresource prefix="/components">
+        <file>MessageBox.qml</file>
+    </qresource>
+</RCC>
