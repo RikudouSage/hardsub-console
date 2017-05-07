@@ -1,5 +1,7 @@
-/bin/*
+/bin/*.*
+/bin/*/*
 !/bin/ffmpeg.exe
+!/bin/fonts/fonts.conf
 /HardsubKonzole.exe
 /source/build-*
-/source/harsdub/*.pro.*
+/source/hardsub/*.pro.user
