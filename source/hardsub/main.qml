@@ -16,6 +16,7 @@ ApplicationWindow {
     property string outputVideoPath
     property int totalDuration
     property int currentDuration
+    property int secondsPassed: 0
 
     visible: true
     width: 640
@@ -135,6 +136,7 @@ ApplicationWindow {
                         var br = bitrate.text;
                         if(srcVideo && subtitles && outputVideo.replace("/","") && br) {
                             totalDuration = videohelper.getLength(sourceFile.text);
+                            durationTimer.start();
                             videohelper.startConversion(srcVideo, subtitles, outputVideo, br);
                             swipeView.setCurrentIndex(1);
                         } else {
@@ -171,6 +173,7 @@ ApplicationWindow {
                 anchors.centerIn: parent
             }
             Rectangle {
+                id: progressBar
                 width: parent.width * 0.8
                 height: 50
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -182,6 +185,16 @@ ApplicationWindow {
                     width: parent.width * (progressPage.percents / 100)
                     color: Material.color(Material.Pink)
                 }
+            }
+            Label {
+                property string remainingText: "0 min."
+                id: remainingLabel
+                width: parent.width * 0.8
+                anchors.horizontalCenter: parent.horizontalCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.topMargin: 20
+                anchors.top: progressBar.bottom
+                text: "Zbývá přibližně: "+remainingText;
             }
         }
     }
@@ -246,6 +259,9 @@ ApplicationWindow {
     Connections {
         target: videohelper
         onResultReady: {
+            durationTimer.stop();
+            remainingLabel.remainingText = "0 min.";
+            secondsPassed = 0;
             currentDuration = 0;
             totalDuration = 0;
             var msgBoxHandler = function() {
@@ -314,6 +330,25 @@ ApplicationWindow {
             text = message;
             msg.title = title;
             msg.visible = true;
+        }
+    }
+
+    Timer {
+        repeat: true
+        id: durationTimer
+        interval: 1000
+        running: false
+        onTriggered: {
+            secondsPassed += 1;
+            var remainingSeconds = secondsPassed / currentDuration * totalDuration;
+            var hours = parseInt(remainingSeconds / 60 / 60);
+            var minutes = parseInt((remainingSeconds - (hours * 60 * 60)) / 60);
+            var remainingText = String(minutes)+" min.";
+            if(hours) {
+                remainingText = String(hours)+" h, "+remainingText;
+            }
+
+            remainingLabel.remainingText = remainingText;
         }
     }
 
