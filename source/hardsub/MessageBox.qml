@@ -7,8 +7,9 @@ Window {
         root.visible = true;
     }
     property alias text: label.text
-    property alias okButton: okButton
-    property alias openButton: openButton
+    property alias button1: okButton
+    property alias button2: openButton
+    property alias button3: button3
 
     id: root
 
@@ -44,6 +45,10 @@ Window {
         }
         Button {
             id: openButton
+            visible: false
+        }
+        Button {
+            id: button3
             visible: false
         }
     }

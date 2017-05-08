@@ -10,6 +10,7 @@ function get() {
 function transaction(func) {
     get().transaction(function(tx) {
         tx.executeSql("CREATE TABLE IF NOT EXISTS paths (sourcePath, subtitlesPath, outputPath)");
+        tx.executeSql("CREATE TABLE IF NOT EXISTS updateVersion (updateVersion)");
         if(typeof func == "function") {
             func(tx);
         }

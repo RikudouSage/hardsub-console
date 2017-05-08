@@ -144,14 +144,14 @@ ApplicationWindow {
                         } else {
                             var msgBoxHandler = function() {
                                 msgbox.close();
-                                msgbox.okButton.clicked.disconnect(msgBoxHandler);
-                                msgbox.okButton.visible = false;
+                                msgbox.button1.clicked.disconnect(msgBoxHandler);
+                                msgbox.button1.visible = false;
                             };
                             msgbox.title = "Chyba";
                             msgbox.text = "Je potřeba vyplnit všechna pole.";
-                            msgbox.okButton.text = "OK";
-                            msgbox.okButton.visible = true;
-                            msgbox.okButton.clicked.connect(msgBoxHandler);
+                            msgbox.button1.text = "OK";
+                            msgbox.button1.visible = true;
+                            msgbox.button1.clicked.connect(msgBoxHandler);
                             msgbox.open();
                         }
                     }
@@ -270,6 +270,55 @@ ApplicationWindow {
     }
 
     Connections {
+        target: misctools
+        onNewVersionAvailable: {
+            DB.transaction(function(tx) {
+                var res = tx.executeSql("SELECT * FROM updateVersion");
+                if(!res.rows.item(0).updateVersion) {
+                    return;
+                }
+                var msgBoxDeregister = function() {
+                    msgbox.close();
+                    msgbox.button1.visible = false;
+                    msgbox.button2.visible = false;
+                    msgbox.button3.visible = false;
+                    msgbox.button1.clicked.disconnect(buttonNoHandler);
+                    msgbox.button2.clicked.disconnect(buttonNeverHandler);
+                    msgbox.button3.clicked.disconnect(buttonYesHandler);
+                };
+                var buttonNoHandler = function() {
+                    msgBoxDeregister();
+                };
+
+                var buttonNeverHandler = function() {
+                    msgBoxDeregister();
+                    DB.transaction(function(tx) {
+                        tx.executeSql("UPDATE updateVersion SET updateVersion = 0");
+                    });
+                };
+
+                var buttonYesHandler = function() {
+                    msgBoxDeregister();
+                    misctools.openDirectory(misctools.releasesUrl);
+                };
+
+                msgbox.title = "Nová verze k dispozici!";
+                msgbox.text = "K dispozici je novější verze tohoto programu, chcete ji nyní stáhnotu?";
+                msgbox.button1.text = "Nikdy";
+                msgbox.button1.visible = true;
+                msgbox.button1.clicked.connect(buttonNeverHandler);
+                msgbox.button2.text = "Ne";
+                msgbox.button2.visible = true;
+                msgbox.button2.clicked.connect(buttonNoHandler);
+                msgbox.button3.text = "Ano";
+                msgbox.button3.visible = true;
+                msgbox.button3.clicked.connect(buttonYesHandler);
+                msgbox.open();
+            });
+        }
+    }
+
+    Connections {
         target: videohelper
         onResultReady: {
             durationTimer.stop();
@@ -280,10 +329,10 @@ ApplicationWindow {
             taskbarButton.progress.visible = false;
             var msgBoxHandler = function() {
                 msgbox.close();
-                msgbox.okButton.clicked.disconnect(msgBoxHandler);
-                msgbox.okButton.visible = false;
-                msgbox.openButton.clicked.disconnect(msgBoxHandlerOpen);
-                msgbox.openButton.visible = false;
+                msgbox.button1.clicked.disconnect(msgBoxHandler);
+                msgbox.button1.visible = false;
+                msgbox.button2.clicked.disconnect(msgBoxHandlerOpen);
+                msgbox.button2.visible = false;
                 swipeView.setCurrentIndex(0);
             };
             var msgBoxHandlerOpen = function() {
@@ -292,13 +341,13 @@ ApplicationWindow {
             };
             msgbox.title = "Hotovo";
             msgbox.text = "Video bylo úspěšně převedeno! Chcete otevřít složku s videem?"
-            msgbox.okButton.text = "Zavřít";
-            msgbox.okButton.visible = true;
-            msgbox.okButton.clicked.connect(msgBoxHandler);
-            msgbox.openButton.text = "Otevřít složku";
-            msgbox.openButton.visible = true;
-            msgbox.openButton.focus = true;
-            msgbox.openButton.clicked.connect(msgBoxHandlerOpen);
+            msgbox.button1.text = "Zavřít";
+            msgbox.button1.visible = true;
+            msgbox.button1.clicked.connect(msgBoxHandler);
+            msgbox.button2.text = "Otevřít složku";
+            msgbox.button2.visible = true;
+            msgbox.button2.focus = true;
+            msgbox.button2.clicked.connect(msgBoxHandlerOpen);
             msgbox.open();
         }
         onFileDoesNotExist: {
@@ -307,15 +356,15 @@ ApplicationWindow {
             taskbarButton.progress.visible = false;
             var msgBoxHandler = function() {
                 msgbox.close();
-                msgbox.okButton.clicked.disconnect(msgBoxHandler);
-                msgbox.okButton.visible = false;
+                msgbox.button1.clicked.disconnect(msgBoxHandler);
+                msgbox.button1.visible = false;
                 swipeView.setCurrentIndex(0);
             };
             msgbox.title = "Chyba";
             msgbox.text = "Jeden ze zadaných souborů neexistuje";
-            msgbox.okButton.text = "OK";
-            msgbox.okButton.visible = true;
-            msgbox.okButton.clicked.connect(msgBoxHandler);
+            msgbox.button1.text = "OK";
+            msgbox.button1.visible = true;
+            msgbox.button1.clicked.connect(msgBoxHandler);
             msgbox.open();
         }
         onCurrentDurationChanged: {
@@ -384,15 +433,21 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
+        misctools.checkNewVersion();
         var defaultPath = dlgSourceFile.shortcuts.movies;
         DB.transaction(function(tx) {
             var res = tx.executeSql("SELECT * FROM paths");
+            var resUpdate = tx.executeSql("SELECT * FROM updateVersion");
             if(!res.rows.length) {
                 tx.executeSql("INSERT INTO paths (sourcePath, subtitlesPath, outputPath) VALUES (?,?,?)", [
                                 defaultPath, defaultPath, defaultPath
                               ]);
                 res = tx.executeSql("SELECT * FROM paths");
             }
+            if(!resUpdate.rows.length) {
+                tx.executeSql("INSERT INTO updateVersion (updateVersion) VALUES (1)");
+            }
+
             var row = res.rows.item(0);
             sourceVideoPath = row.sourcePath;
             sourceSubtitlePath = row.subtitlesPath;
