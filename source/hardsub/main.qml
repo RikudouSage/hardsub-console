@@ -167,6 +167,17 @@ ApplicationWindow {
         Page {
             property double percents: 0
             id: progressPage
+            Button {
+                id: stopConversion
+                text: "Zastavit vytváření hardsubu"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottomMargin: 20
+                anchors.bottom: conversionLabel.top
+                onClicked: {
+                    videohelper.stopConversion();
+                }
+            }
+
             Label {
                 id: conversionLabel
                 text: "Probíhá konverze ("+progressPage.percents+" %)"
@@ -305,6 +316,14 @@ ApplicationWindow {
         }
         onCurrentDurationChanged: {
             currentDuration = duration;
+        }
+        onCancelled: {
+            durationTimer.stop();
+            remainingLabel.remainingText = "0 min.";
+            secondsPassed = 0;
+            currentDuration = 0;
+            totalDuration = 0;
+            swipeView.setCurrentIndex(0);
         }
     }
 

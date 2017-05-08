@@ -74,3 +74,9 @@ void VideoConverter::terminateProcess() {
     connect(&ffmpeg, SIGNAL(finished(int,QProcess::ExitStatus)), this, SIGNAL(canDeleteObject()));
     ffmpeg.kill();
 }
+
+void VideoConverter::handleStopRequest() {
+    disconnect(&ffmpeg, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(itsDone()));
+    connect(&ffmpeg, SIGNAL(finished(int,QProcess::ExitStatus)), this, SIGNAL(cancelled()));
+    ffmpeg.kill();
+}

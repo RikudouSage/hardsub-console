@@ -11,6 +11,8 @@ VideoHelper::VideoHelper() {
     connect(vc, &VideoConverter::fileDoesNotExist, this, &VideoHelper::handleFileDoesNotExist);
     connect(vc, &VideoConverter::canDeleteObject, this, &VideoHelper::cleanupPointers);
     connect(vc, &VideoConverter::currentDurationChanged, this, &VideoHelper::handleDurationUpdate);
+    connect(this, &VideoHelper::stopConversion, vc, &VideoConverter::handleStopRequest);
+    connect(vc, &VideoConverter::cancelled, this, &VideoHelper::cancelled);
 }
 
 void VideoHelper::handleDurationUpdate(int duration) {

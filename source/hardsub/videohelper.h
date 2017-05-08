@@ -28,6 +28,8 @@ signals:
     void resultReady();
     void fileDoesNotExist();
     void currentDurationChanged(int duration);
+    void stopConversion();
+    void cancelled();
 };
 
 #endif // VIDEOHELPER_H

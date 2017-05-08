@@ -15,11 +15,13 @@ public slots:
     void itsDone();
     void terminateProcess();
     void progressUpdate();
+    void handleStopRequest();
 signals:
     void resultReady();
     void fileDoesNotExist();
     void canDeleteObject();
     void currentDurationChanged(int duration);
+    void cancelled();
 };
 
 #endif // VIDEOCONVERTER_H
