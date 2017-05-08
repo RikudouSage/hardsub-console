@@ -1,4 +1,5 @@
 QT += qml quick
+win32:QT += winextras
 
 CONFIG += c++11
 

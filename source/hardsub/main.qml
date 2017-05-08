@@ -5,6 +5,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.LocalStorage 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Material 2.1
+import QtWinExtras 1.0
 
 import "qrc:/DB.js" as DB
 import "qrc:/components"
@@ -138,6 +139,7 @@ ApplicationWindow {
                             totalDuration = videohelper.getLength(sourceFile.text);
                             durationTimer.start();
                             videohelper.startConversion(srcVideo, subtitles, outputVideo, br);
+                            taskbarButton.progress.visible = true;
                             swipeView.setCurrentIndex(1);
                         } else {
                             var msgBoxHandler = function() {
@@ -275,6 +277,7 @@ ApplicationWindow {
             secondsPassed = 0;
             currentDuration = 0;
             totalDuration = 0;
+            taskbarButton.progress.visible = false;
             var msgBoxHandler = function() {
                 msgbox.close();
                 msgbox.okButton.clicked.disconnect(msgBoxHandler);
@@ -301,6 +304,7 @@ ApplicationWindow {
         onFileDoesNotExist: {
             currentDuration = 0;
             totalDuration = 0;
+            taskbarButton.progress.visible = false;
             var msgBoxHandler = function() {
                 msgbox.close();
                 msgbox.okButton.clicked.disconnect(msgBoxHandler);
@@ -324,6 +328,7 @@ ApplicationWindow {
             currentDuration = 0;
             totalDuration = 0;
             swipeView.setCurrentIndex(0);
+            taskbarButton.progress.visible = false;
         }
     }
 
@@ -369,6 +374,13 @@ ApplicationWindow {
 
             remainingLabel.remainingText = remainingText;
         }
+    }
+
+    TaskbarButton {
+        id: taskbarButton
+        progress.maximum: totalDuration
+        progress.value: currentDuration
+        progress.visible: false
     }
 
     Component.onCompleted: {
