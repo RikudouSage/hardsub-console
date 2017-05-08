@@ -1,5 +1,5 @@
 #define MyAppName "Hardsub Konzole"
-#define MyAppVersion "2.0"
+#define MyAppVersion "2.1"
 #define MyAppPublisher "Hokage.cz"
 #define MyAppURL "http://hokage.cz"
 #define MyAppExeName "hardsub.exe"

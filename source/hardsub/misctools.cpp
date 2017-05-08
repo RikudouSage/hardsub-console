@@ -19,7 +19,7 @@ void MiscTools::openDirectory(QString dir) {
 }
 
 QString MiscTools::getVersion() {
-    return "2.0.0";
+    return "2.1.0";
 }
 
 QString MiscTools::getVersionCheckURL() {
