@@ -359,7 +359,7 @@ ApplicationWindow {
         running: false
         onTriggered: {
             secondsPassed += 1;
-            var remainingSeconds = secondsPassed / currentDuration * totalDuration;
+            var remainingSeconds = secondsPassed / currentDuration * totalDuration - secondsPassed;
             var hours = parseInt(remainingSeconds / 60 / 60);
             var minutes = parseInt((remainingSeconds - (hours * 60 * 60)) / 60);
             var remainingText = String(minutes)+" min.";
