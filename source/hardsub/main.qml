@@ -381,13 +381,8 @@ ApplicationWindow {
         }
     }
 
-    MessageDialog {
-        id: msg
-        function setAndShow(message, title) {
-            text = message;
-            msg.title = title;
-            msg.visible = true;
-        }
+    MessageBox {
+        id: msgbox
     }
 
     Timer {
