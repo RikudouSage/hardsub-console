@@ -303,7 +303,7 @@ ApplicationWindow {
                 };
 
                 msgbox.title = "Nová verze k dispozici!";
-                msgbox.text = "K dispozici je novější verze tohoto programu, chcete ji nyní stáhnotu?";
+                msgbox.text = "K dispozici je novější verze tohoto programu, chcete ji nyní stáhnout?";
                 msgbox.button1.text = "Nikdy";
                 msgbox.button1.visible = true;
                 msgbox.button1.clicked.connect(buttonNeverHandler);
