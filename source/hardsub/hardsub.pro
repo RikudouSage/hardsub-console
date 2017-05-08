@@ -17,7 +17,13 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+TRANSLATIONS += localizations/cs_CZ.ts
+
 HEADERS += \
     videohelper.h \
     videoconverter.h \
     misctools.h
+
+lupdate_only {
+    SOURCES += ./*.qml
+}

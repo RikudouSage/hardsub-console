@@ -2,6 +2,9 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QObject>
+#include <QTranslator>
+#include <QLocale>
+#include <QDebug>
 
 #include "videohelper.h"
 #include "misctools.h"
@@ -10,6 +13,10 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
+
+    QTranslator qtTranslator;
+    qtTranslator.load(QLocale::system().name(), ":/localizations");
+    app.installTranslator(&qtTranslator);
 
     VideoHelper vh;
     MiscTools mt;

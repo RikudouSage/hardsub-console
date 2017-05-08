@@ -26,7 +26,7 @@ ApplicationWindow {
     height: 450
     minimumHeight: 450
     maximumHeight: 450
-    title: "Hardsub Konzole"
+    title: qsTr("Hardsub Console")
 
     onCurrentDurationChanged: {
         var d = Math.round((currentDuration / totalDuration * 100) * 100) / 100;
@@ -46,7 +46,7 @@ ApplicationWindow {
                 padding: 30
                 Label {
                     width: parent.width
-                    text: "Zvolte soubor s původním videem:"
+                    text: qsTr("Choose the original video file")+":"
                 }
                 Row {
                     width: parent.width
@@ -57,7 +57,7 @@ ApplicationWindow {
                     }
                     Button {
                         id: selectSourceButton
-                        text: "Zvolit video"
+                        text: qsTr("Select video")
                         onClicked: {
                             dlgSourceFile.open();
                         }
@@ -65,7 +65,7 @@ ApplicationWindow {
                 }
                 Label {
                     width: parent.width
-                    text: "Zvolte soubor s titulkami:"
+                    text: qsTr("Choose the subtitles file")+":"
                 }
                 Row {
                     width: parent.width
@@ -76,7 +76,7 @@ ApplicationWindow {
                     }
                     Button {
                         id: selectSubtitlesButton
-                        text: "Zvolit titulky"
+                        text: qsTr("Select subtitles")
                         onClicked: {
                             dlgSubtitlesFile.open();
                         }
@@ -84,7 +84,7 @@ ApplicationWindow {
                 }
                 Label {
                     width: parent.width
-                    text: "Zvolte složku, do které se uloží hardsub:"
+                    text: qsTr("Choose the folder the hardsub will be saved to")+":"
                 }
                 Row {
                     width: parent.width
@@ -95,7 +95,7 @@ ApplicationWindow {
                     }
                     Button {
                         id: selectOutputFileButton
-                        text: "Zvolit složku"
+                        text: qsTr("Select folder")
                         onClicked: {
                             dlgOutputFile.open();
                         }
@@ -104,7 +104,7 @@ ApplicationWindow {
 
                 Label {
                     width: parent.width
-                    text: "Zadejte název výsledného souboru:"
+                    text: qsTr("Choose the output filename")+":"
                 }
 
                 TextField {
@@ -118,7 +118,7 @@ ApplicationWindow {
 
                 Label {
                     width: parent.width
-                    text: "Zadejte bitrate videa v kB:"
+                    text: qsTr("Input the output video bitrate in kB")+":"
                 }
 
                 TextField {
@@ -129,7 +129,7 @@ ApplicationWindow {
 
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "Vytvořit hardsub"
+                    text: qsTr("Create hardsub")
                     onClicked: {
                         var srcVideo = sourceFile.text;
                         var subtitles = subtitlesFile.text;
@@ -147,9 +147,9 @@ ApplicationWindow {
                                 msgbox.button1.clicked.disconnect(msgBoxHandler);
                                 msgbox.button1.visible = false;
                             };
-                            msgbox.title = "Chyba";
-                            msgbox.text = "Je potřeba vyplnit všechna pole.";
-                            msgbox.button1.text = "OK";
+                            msgbox.title = qsTr("Error");
+                            msgbox.text = qsTr("You need to fill all the fields.");
+                            msgbox.button1.text = qsTr("OK");
                             msgbox.button1.visible = true;
                             msgbox.button1.clicked.connect(msgBoxHandler);
                             msgbox.open();
@@ -171,7 +171,7 @@ ApplicationWindow {
             id: progressPage
             Button {
                 id: stopConversion
-                text: "Zastavit vytváření hardsubu"
+                text: qsTr("Stop hardsub creation")
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottomMargin: 20
                 anchors.bottom: conversionLabel.top
@@ -182,7 +182,7 @@ ApplicationWindow {
 
             Label {
                 id: conversionLabel
-                text: "Probíhá konverze ("+progressPage.percents+" %)"
+                text: qsTr("Hardsub is being created (%1%)").arg(progressPage.percents)
                 anchors.centerIn: parent
             }
             Rectangle {
@@ -200,14 +200,14 @@ ApplicationWindow {
                 }
             }
             Label {
-                property string remainingText: "0 min."
+                property string remainingText: qsTr("0 min.")
                 id: remainingLabel
                 width: parent.width * 0.8
                 anchors.horizontalCenter: parent.horizontalCenter
                 horizontalAlignment: Text.AlignHCenter
                 anchors.topMargin: 20
                 anchors.top: progressBar.bottom
-                text: "Zbývá přibližně: "+remainingText;
+                text: qsTr("Remaining: %1").arg(remainingText);
             }
         }
     }
@@ -226,9 +226,9 @@ ApplicationWindow {
 
     FileDialog {
         id: dlgSourceFile
-        title: "Zvolte video"
+        title: qsTr("Select video")
         folder: sourceVideoPath
-        nameFilters: ["Videa (*.mkv)"]
+        nameFilters: [qsTr("Videos %1").arg("(*.mkv)")]
         onAccepted: {
             DB.updateSourceDir(folder);
             sourceFile.text = String(fileUrl).replace("file:///","");
@@ -248,9 +248,9 @@ ApplicationWindow {
 
     FileDialog {
         id: dlgSubtitlesFile
-        title: "Zvolte titulky"
+        title: qsTr("Select subtitles")
         folder: sourceSubtitlePath
-        nameFilters: ["Titulky (*.ass *.srt)", "Všechny soubory (*)"]
+        nameFilters: [qsTr("Subtitles %1").arg("(*.ass *.srt)"), qsTr("All files %1").arg("(*)")]
         onAccepted: {
             DB.updateSubtitlesDir(folder);
             subtitlesFile.text = String(fileUrl).replace("file:///","");
@@ -259,7 +259,7 @@ ApplicationWindow {
 
     FileDialog {
         id: dlgOutputFile
-        title: "Zvolte soubor k uložení"
+        title: qsTr("Choose the output dir")
         folder: outputVideoPath
         selectExisting: true
         selectFolder: true
@@ -302,15 +302,15 @@ ApplicationWindow {
                     misctools.openDirectory(misctools.releasesUrl);
                 };
 
-                msgbox.title = "Nová verze k dispozici!";
-                msgbox.text = "K dispozici je novější verze tohoto programu, chcete ji nyní stáhnout?";
-                msgbox.button1.text = "Nikdy";
+                msgbox.title = qsTr("New version available!");
+                msgbox.text = qsTr("New version (%1) of this app is available! Do you want to download it now?").arg(version);
+                msgbox.button1.text = qsTr("Never");
                 msgbox.button1.visible = true;
                 msgbox.button1.clicked.connect(buttonNeverHandler);
-                msgbox.button2.text = "Ne";
+                msgbox.button2.text = qsTr("No");
                 msgbox.button2.visible = true;
                 msgbox.button2.clicked.connect(buttonNoHandler);
-                msgbox.button3.text = "Ano";
+                msgbox.button3.text = qsTr("Yes");
                 msgbox.button3.visible = true;
                 msgbox.button3.clicked.connect(buttonYesHandler);
                 msgbox.open();
@@ -322,7 +322,7 @@ ApplicationWindow {
         target: videohelper
         onResultReady: {
             durationTimer.stop();
-            remainingLabel.remainingText = "0 min.";
+            remainingLabel.remainingText = qsTr("0 min.");
             secondsPassed = 0;
             currentDuration = 0;
             totalDuration = 0;
@@ -339,12 +339,12 @@ ApplicationWindow {
                 msgBoxHandler();
                 misctools.openDirectory("file:///"+outputDir.text);
             };
-            msgbox.title = "Hotovo";
-            msgbox.text = "Video bylo úspěšně převedeno! Chcete otevřít složku s videem?"
-            msgbox.button1.text = "Zavřít";
+            msgbox.title = qsTr("Done");
+            msgbox.text = qsTr("Hardsub created succesfully! Do you want to open the output folder now?");
+            msgbox.button1.text = qsTr("Close");
             msgbox.button1.visible = true;
             msgbox.button1.clicked.connect(msgBoxHandler);
-            msgbox.button2.text = "Otevřít složku";
+            msgbox.button2.text = qsTr("Open folder");
             msgbox.button2.visible = true;
             msgbox.button2.focus = true;
             msgbox.button2.clicked.connect(msgBoxHandlerOpen);
@@ -360,9 +360,9 @@ ApplicationWindow {
                 msgbox.button1.visible = false;
                 swipeView.setCurrentIndex(0);
             };
-            msgbox.title = "Chyba";
-            msgbox.text = "Jeden ze zadaných souborů neexistuje";
-            msgbox.button1.text = "OK";
+            msgbox.title = qsTr("Error");
+            msgbox.text = qsTr("One of the selected files does not exist");
+            msgbox.button1.text = qsTr("OK");
             msgbox.button1.visible = true;
             msgbox.button1.clicked.connect(msgBoxHandler);
             msgbox.open();
@@ -372,29 +372,13 @@ ApplicationWindow {
         }
         onCancelled: {
             durationTimer.stop();
-            remainingLabel.remainingText = "0 min.";
+            remainingLabel.remainingText = qsTr("0 min.");
             secondsPassed = 0;
             currentDuration = 0;
             totalDuration = 0;
             swipeView.setCurrentIndex(0);
             taskbarButton.progress.visible = false;
         }
-    }
-
-    MessageDialog {
-        id: doneDialog
-        text: "Video bylo úspěšně převedeno! Chcete otevřít složku s videem?"
-        standardButtons: StandardButton.Open | StandardButton.Cancel
-        title: "Hotovo"
-        onAccepted: {
-            if(clickedButton == StandardButton.Open) {
-                misctools.openDirectory("file:///"+outputDir.text);
-            }
-        }
-    }
-
-    MessageBox {
-        id: msgbox
     }
 
     MessageDialog {
@@ -416,9 +400,10 @@ ApplicationWindow {
             var remainingSeconds = secondsPassed / currentDuration * totalDuration - secondsPassed;
             var hours = parseInt(remainingSeconds / 60 / 60);
             var minutes = parseInt((remainingSeconds - (hours * 60 * 60)) / 60);
-            var remainingText = String(minutes)+" min.";
+            var remainingText = String(minutes)+" "+qsTr("min.");
             if(hours) {
-                remainingText = String(hours)+" h, "+remainingText;
+                //~ Context Short for hour
+                remainingText = String(hours)+" "+qsTr("h")+", "+remainingText;
             }
 
             remainingLabel.remainingText = remainingText;

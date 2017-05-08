@@ -3,6 +3,7 @@
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>DB.js</file>
+        <file>localizations/cs_CZ.qm</file>
     </qresource>
     <qresource prefix="/components">
         <file>MessageBox.qml</file>
