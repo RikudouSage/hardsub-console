@@ -5,7 +5,6 @@ import QtQuick.Dialogs 1.2
 import QtQuick.LocalStorage 2.0
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Material 2.1
-import QtWinExtras 1.0
 
 import "qrc:/DB.js" as DB
 import "qrc:/components"
@@ -139,7 +138,7 @@ ApplicationWindow {
                             totalDuration = videohelper.getLength(sourceFile.text);
                             durationTimer.start();
                             videohelper.startConversion(srcVideo, subtitles, outputVideo, br);
-                            taskbarButton.progress.visible = true;
+                            taskbarButton.progressVisible = true;
                             swipeView.setCurrentIndex(1);
                         } else {
                             var msgBoxHandler = function() {
@@ -231,7 +230,7 @@ ApplicationWindow {
         nameFilters: [qsTr("Videos %1").arg("(*.mkv)")]
         onAccepted: {
             DB.updateSourceDir(folder);
-            sourceFile.text = String(fileUrl).replace("file:///","");
+            sourceFile.text = String(fileUrl).replace(misctools.filePrefix,"");
             bitrate.text = videohelper.getBitrate(sourceFile.text);
             if(!outputFile.editedByHand) {
                 var temp = String(fileUrl).split("/");
@@ -253,7 +252,7 @@ ApplicationWindow {
         nameFilters: [qsTr("Subtitles %1").arg("(*.ass *.srt)"), qsTr("All files %1").arg("(*)")]
         onAccepted: {
             DB.updateSubtitlesDir(folder);
-            subtitlesFile.text = String(fileUrl).replace("file:///","");
+            subtitlesFile.text = String(fileUrl).replace(misctools.filePrefix,"");
         }
     }
 
@@ -265,7 +264,7 @@ ApplicationWindow {
         selectFolder: true
         onAccepted: {
             DB.updateOutputDir(folder);
-            outputDir.text = String(fileUrl).replace("file:///","");
+            outputDir.text = String(fileUrl).replace(misctools.filePrefix,"");
         }
     }
 
@@ -326,7 +325,7 @@ ApplicationWindow {
             secondsPassed = 0;
             currentDuration = 0;
             totalDuration = 0;
-            taskbarButton.progress.visible = false;
+            taskbarButton.progressVisible = false;
             var msgBoxHandler = function() {
                 msgbox.close();
                 msgbox.button1.clicked.disconnect(msgBoxHandler);
@@ -337,7 +336,7 @@ ApplicationWindow {
             };
             var msgBoxHandlerOpen = function() {
                 msgBoxHandler();
-                misctools.openDirectory("file:///"+outputDir.text);
+                misctools.openDirectory(misctools.filePrefix+outputDir.text);
             };
             msgbox.title = qsTr("Done");
             msgbox.text = qsTr("Hardsub created succesfully! Do you want to open the output folder now?");
@@ -353,7 +352,7 @@ ApplicationWindow {
         onFileDoesNotExist: {
             currentDuration = 0;
             totalDuration = 0;
-            taskbarButton.progress.visible = false;
+            taskbarButton.progressVisible = false;
             var msgBoxHandler = function() {
                 msgbox.close();
                 msgbox.button1.clicked.disconnect(msgBoxHandler);
@@ -377,7 +376,7 @@ ApplicationWindow {
             currentDuration = 0;
             totalDuration = 0;
             swipeView.setCurrentIndex(0);
-            taskbarButton.progress.visible = false;
+            taskbarButton.progressVisible = false;
         }
     }
 
@@ -405,11 +404,11 @@ ApplicationWindow {
         }
     }
 
-    TaskbarButton {
+    AppTaskbarButton {
         id: taskbarButton
-        progress.maximum: totalDuration
-        progress.value: currentDuration
-        progress.visible: false
+        maximum: totalDuration
+        current: currentDuration
+        progressVisible: false
     }
 
     Component.onCompleted: {

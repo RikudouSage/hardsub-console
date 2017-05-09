@@ -40,3 +40,11 @@ void MiscTools::handleVersionCheck(QNetworkReply *reply) {
         emit newVersionAvailable(remoteVersion);
     }
 }
+
+QString MiscTools::getFilePrefix() {
+#if defined(Q_OS_WIN)
+    return QString("file:///");
+#elif defined(Q_OS_LINUX)
+    return QString("file://");
+#endif
+}

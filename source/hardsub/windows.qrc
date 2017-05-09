@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/components">
+        <file alias="AppTaskbarButton.qml">components/windows/AppTaskbarButton.qml</file>
+    </qresource>
+</RCC>

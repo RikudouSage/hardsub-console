@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     VideoHelper vh;
     MiscTools mt;
 
-    QObject::connect(&app, QGuiApplication::aboutToQuit, &vh, VideoHelper::initiateCleanup);
+    QObject::connect(&app, &QGuiApplication::aboutToQuit, &vh, &VideoHelper::initiateCleanup);
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("videohelper", &vh);

@@ -10,6 +10,9 @@ SOURCES += main.cpp \
 
 RESOURCES += qml.qrc
 
+win32:RESOURCES += windows.qrc
+unix:RESOURCES += linux.qrc
+
 RC_ICONS = icon.ico
 
 DEFINES += QT_DEPRECATED_WARNINGS

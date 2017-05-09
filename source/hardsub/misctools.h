@@ -11,6 +11,7 @@ class MiscTools : public QObject
     Q_PROPERTY(QString version READ getVersion CONSTANT)
     Q_PROPERTY(QString versionCheckUrl READ getVersionCheckURL CONSTANT)
     Q_PROPERTY(QString releasesUrl READ getReleasesURL CONSTANT)
+    Q_PROPERTY(QString filePrefix READ getFilePrefix CONSTANT)
     QNetworkAccessManager *networkManager = new QNetworkAccessManager(this);
 public:
     MiscTools();
@@ -21,6 +22,7 @@ public:
 private:
     QString getVersion();
     QString getVersionCheckURL();
+    QString getFilePrefix();
     QString getReleasesURL();
 
 private slots:
