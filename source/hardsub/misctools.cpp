@@ -18,15 +18,15 @@ void MiscTools::openDirectory(QString dir) {
     QDesktopServices::openUrl(QUrl(dir));
 }
 
-QString MiscTools::getVersion() {
+const QString MiscTools::getVersion() {
     return "2.1.1";
 }
 
-QString MiscTools::getVersionCheckURL() {
+const QString MiscTools::getVersionCheckURL() {
     return "https://raw.githubusercontent.com/RikudouSage/hardsub-konzole/master/VERSION.txt";
 }
 
-QString MiscTools::getReleasesURL() {
+const QString MiscTools::getReleasesURL() {
     return "https://github.com/RikudouSage/hardsub-konzole/releases";
 }
 
@@ -41,7 +41,7 @@ void MiscTools::handleVersionCheck(QNetworkReply *reply) {
     }
 }
 
-QString MiscTools::getFilePrefix() {
+const QString MiscTools::getFilePrefix() {
 #if defined(Q_OS_WIN)
     return QString("file:///");
 #elif defined(Q_OS_LINUX)

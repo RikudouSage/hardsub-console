@@ -20,10 +20,10 @@ public:
     Q_INVOKABLE void checkNewVersion();
 
 private:
-    QString getVersion();
-    QString getVersionCheckURL();
-    QString getFilePrefix();
-    QString getReleasesURL();
+    const QString getVersion();
+    const QString getVersionCheckURL();
+    const QString getFilePrefix();
+    const QString getReleasesURL();
 
 private slots:
     void handleVersionCheck(QNetworkReply *reply);
