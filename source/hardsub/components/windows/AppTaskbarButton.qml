@@ -2,8 +2,17 @@ import QtQuick 2.7
 import QtWinExtras 1.0
 
 TaskbarButton {
-    property alias current: progress.value
-    property alias maximum: progress.maximum
-    property alias progressVisible: progress.visible
+    property int current
+    property int maximum
+    property bool progressVisible
     id: root
+    onCurrentChanged: {
+        root.progress.value = current;
+    }
+    onMaximumChanged: {
+        root.progress.maximum = maximum;
+    }
+    onProgressVisibleChanged: {
+        root.progress.visible = progressVisible;
+    }
 }
