@@ -12,6 +12,7 @@ VideoHelper::VideoHelper() {
     connect(vc, &VideoConverter::canDeleteObject, this, &VideoHelper::cleanupPointers);
     connect(vc, &VideoConverter::currentDurationChanged, this, &VideoHelper::handleDurationUpdate);
     connect(this, &VideoHelper::stopConversion, vc, &VideoConverter::handleStopRequest);
+    connect(this, &VideoHelper::stopConversion, this, &VideoHelper::handleStopConversion);
     connect(vc, &VideoConverter::cancelled, this, &VideoHelper::cancelled);
 }
 
@@ -51,6 +52,7 @@ int VideoHelper::getLength(QString filename) {
 }
 
 void VideoHelper::handleResults() {
+    setIsRunning(false);
     emit resultReady();
 }
 
@@ -68,4 +70,21 @@ void VideoHelper::cleanupPointers() {
 
 void VideoHelper::startConversion(const QString &srcVideo, const QString &subtitles, const QString &outputVideo, int bitrate) {
     vc->doWork(srcVideo, subtitles, outputVideo, bitrate);
+    setIsRunning(true);
+}
+
+bool VideoHelper::getIsRunning() {
+    return isRunning;
+}
+
+void VideoHelper::setIsRunning(bool running) {
+    bool changed = !(running == isRunning);
+    isRunning = running;
+    if(changed) {
+        emit isRunningChanged(isRunning);
+    }
+}
+
+void VideoHelper::handleStopConversion() {
+    setIsRunning(false);
 }

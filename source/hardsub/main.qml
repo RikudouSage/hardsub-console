@@ -17,6 +17,7 @@ ApplicationWindow {
     property int totalDuration
     property int currentDuration
     property int secondsPassed: 0
+    property bool isRunning: videohelper.isRunning
 
     visible: true
     width: 640
@@ -25,7 +26,7 @@ ApplicationWindow {
     height: 450
     minimumHeight: 450
     maximumHeight: 450
-    title: qsTr("Hardsub Console")
+    title: isRunning?remainingLabel.remainingText+" - "+qsTr("Hardsub Console"):qsTr("Hardsub Console")
 
     onCurrentDurationChanged: {
         var d = Math.round((currentDuration / totalDuration * 100) * 100) / 100;

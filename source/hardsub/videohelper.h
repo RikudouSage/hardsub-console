@@ -10,7 +10,11 @@
 class VideoHelper : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool isRunning READ getIsRunning NOTIFY isRunningChanged)
     VideoConverter *vc = new VideoConverter;
+    bool isRunning = false;
+    bool getIsRunning();
+    void setIsRunning(bool running);
 public:
     VideoHelper();
     Q_INVOKABLE int getBitrate(QString filename);
@@ -23,6 +27,7 @@ public slots:
     void cleanupPointers();
     void startConversion(const QString &srcVideo, const QString &subtitles, const QString &outputVideo, int bitrate);
     void handleDurationUpdate(int duration);
+    void handleStopConversion();
 
 signals:
     void resultReady();
@@ -30,6 +35,7 @@ signals:
     void currentDurationChanged(int duration);
     void stopConversion();
     void cancelled();
+    void isRunningChanged(bool running);
 };
 
 #endif // VIDEOHELPER_H
