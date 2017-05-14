@@ -44,6 +44,18 @@ ApplicationWindow {
         progressPage.percents = d;
     }
 
+    Label {
+        text: "Hokage.cz - 2017"
+        font.pixelSize: 12
+        color: Material.color(Material.Grey)
+        anchors.right: parent.right
+        anchors.top: parent.top
+        z: 100
+        anchors.rightMargin: 10
+        anchors.topMargin: 10
+        font.family: "Calibri"
+    }
+
     SwipeView {
         id: swipeView
         anchors.fill: parent
