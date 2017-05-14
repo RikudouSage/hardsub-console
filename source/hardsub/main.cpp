@@ -8,6 +8,7 @@
 
 #include "videohelper.h"
 #include "misctools.h"
+#include "mkvtoolnixhelper.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,12 +21,14 @@ int main(int argc, char *argv[])
 
     VideoHelper vh;
     MiscTools mt;
+    MKVToolnixHelper mkvhelper;
 
     QObject::connect(&app, &QGuiApplication::aboutToQuit, &vh, &VideoHelper::initiateCleanup);
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("videohelper", &vh);
     engine.rootContext()->setContextProperty("misctools", &mt);
+    engine.rootContext()->setContextProperty("mkvhelper", &mkvhelper);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     return app.exec();
