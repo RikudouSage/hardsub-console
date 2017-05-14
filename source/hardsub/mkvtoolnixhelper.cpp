@@ -7,11 +7,43 @@
 
 MKVToolnixHelper::MKVToolnixHelper() {
     mkvinfo = new QProcess(this);
+    mkvmerge = new QProcess(this);
 
     connect(mkvinfo, SIGNAL(finished(int)), this, SLOT(handleMkvinfoResults(int)));
     connect(mkvinfo, SIGNAL(error(QProcess::ProcessError)), this, SLOT(handleMkvinfoError()));
 
+    connect(mkvmerge, SIGNAL(finished(int)), this, SLOT(handleMkvmergeResults(int)));
+    connect(mkvmerge, SIGNAL(error(QProcess::ProcessError)), this, SLOT(handleMkvmergeError()));
+
     connect(this, &MKVToolnixHelper::extractSubtitles, this, &MKVToolnixHelper::handleExtractSubtitlesRequest);
+    connect(this, &MKVToolnixHelper::extractVideo, this, &MKVToolnixHelper::handleExtractVideoRequest);
+}
+
+void MKVToolnixHelper::handleMkvmergeResults(int exitCode) {
+    if(exitCode != QProcess::NormalExit) {
+        emit extractingVideoFailed();
+        return;
+    }
+    emit extractingVideoSucceeded();
+}
+
+void MKVToolnixHelper::handleExtractVideoRequest(QString videoFile, QString saveFile) {
+    QFile videoFileHandle(videoFile);
+    if(!videoFileHandle.exists()) {
+        emit extractVideoDoesNotExist();
+        return;
+    }
+    QFileInfo saveFileHandle(saveFile);
+    qDebug() << saveFile;
+    if(!saveFileHandle.absoluteDir().exists()) {
+        qDebug() << saveFileHandle.absoluteDir();
+        emit extractVideoDirDoesNotExist();
+        return;
+    }
+    QStringList arguments;
+    arguments << "--ui-language" << "en";
+    arguments << "-o" << saveFile << "--no-subtitles" << videoFile;
+    mkvmerge->start("mkvmerge", arguments);
 }
 
 void MKVToolnixHelper::handleExtractSubtitlesRequest(QString videoFile, QStringList trackIDs) {
@@ -73,6 +105,10 @@ void MKVToolnixHelper::handleMkvinfoError() {
     setResultsReady(false);
     setLoadingInfo(false);
     setErrorLoadingInfo(true);
+}
+
+void MKVToolnixHelper::handleMkvmergeError() {
+    emit extractingVideoFailed();
 }
 
 void MKVToolnixHelper::getTracksInfo(const QString file) {

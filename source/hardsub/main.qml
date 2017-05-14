@@ -28,6 +28,8 @@ ApplicationWindow {
 
     property bool isRunning: videohelper.isRunning
 
+    id: appwindow
+
     visible: true
     width: 640
     minimumWidth: width
@@ -303,7 +305,27 @@ ApplicationWindow {
                             enabled: mkvToolnixResults.videosCount > 0
                             text: qsTr("Create copy of video without subtitles")
                             onClicked: {
-                                console.log("create video without subs");
+                                extractVideoDlg.open();
+                            }
+
+                            FileDialog {
+                                id: extractVideoDlg
+                                folder: mkvToolnixSavePath
+                                selectExisting: false
+                                selectFolder: false
+                                selectMultiple: false
+                                title: qsTr("Save video")
+                                nameFilters: [qsTr("Videos %1").arg("(*.mkv)")]
+                                onAccepted: {
+                                    var file = String(fileUrl).replace(misctools.filePrefix, "");
+                                    if(file.indexOf(".mkv", file.length - 4) == -1) {
+                                        file += ".mkv";
+                                    }
+                                    var orig = String(mkvSourceFile.text);
+                                    mkvhelper.extractVideo(orig, file);
+                                    swipeView.setCurrentIndex(cPAGE_MKV_PROGRESS);
+                                    tabBar.enabled = false;
+                                }
                             }
                         }
                     }
@@ -316,6 +338,79 @@ ApplicationWindow {
                         onExtractingSubtitlesDone: {
                             saveExtractedSubtitlesDialog.paths = tempPaths;
                             saveExtractedSubtitlesDialog.open();
+                        }
+                        onExtractVideoDoesNotExist: {
+                            var msgBoxHandler = function() {
+                                msgbox.close();
+                                msgbox.button1.clicked.disconnect(msgBoxHandler);
+                                msgbox.button1.visible = false;
+                                swipeView.setCurrentIndex(cPAGE_MKVTOOLS);
+                                tabBar.enabled = true;
+                            };
+                            msgbox.title = qsTr("Error");
+                            msgbox.text = qsTr("Could not extract video. The original video does not exist.");;
+                            msgbox.button1.text = qsTr("Close");
+                            msgbox.button1.visible = true;
+                            msgbox.button1.clicked.connect(msgBoxHandler);
+                            msgbox.open();
+                        }
+                        onExtractVideoDirDoesNotExist: {
+                            var msgBoxHandler = function() {
+                                msgbox.close();
+                                msgbox.button1.clicked.disconnect(msgBoxHandler);
+                                msgbox.button1.visible = false;
+                                swipeView.setCurrentIndex(cPAGE_MKVTOOLS);
+                                tabBar.enabled = true;
+                            };
+                            msgbox.title = qsTr("Error");
+                            msgbox.text = qsTr("Could not extract video. The directory to save video does not exist.");;
+                            msgbox.button1.text = qsTr("Close");
+                            msgbox.button1.visible = true;
+                            msgbox.button1.clicked.connect(msgBoxHandler);
+                            msgbox.open();
+                        }
+                        onExtractingVideoFailed: {
+                            var msgBoxHandler = function() {
+                                msgbox.close();
+                                msgbox.button1.clicked.disconnect(msgBoxHandler);
+                                msgbox.button1.visible = false;
+                                swipeView.setCurrentIndex(cPAGE_MKVTOOLS);
+                                tabBar.enabled = true;
+                            };
+                            msgbox.title = qsTr("Error");
+                            msgbox.text = qsTr("Could not extract video. Unknown error.");;
+                            msgbox.button1.text = qsTr("Close");
+                            msgbox.button1.visible = true;
+                            msgbox.button1.clicked.connect(msgBoxHandler);
+                            msgbox.open();
+                        }
+                        onExtractingVideoSucceeded: {
+                            var folder = String(extractVideoDlg.folder).replace(misctools.filePrefix, "");
+                            var msgBoxHandler = function() {
+                                msgbox.close();
+                                msgbox.button1.clicked.disconnect(msgBoxHandler);
+                                msgbox.button1.visible = false;
+                                msgbox.button2.clicked.disconnect(msgBoxHandlerOpen);
+                                msgbox.button2.visible = false;
+                                swipeView.setCurrentIndex(cPAGE_MKVTOOLS);
+                                tabBar.enabled = true;
+                                sourceFile.text = String(extractVideoDlg.fileUrl).replace(misctools.filePrefix, "");
+                                bitrate.text = videohelper.getBitrate(sourceFile.text);
+                            };
+                            var msgBoxHandlerOpen = function() {
+                                msgBoxHandler();
+                                misctools.openDirectory(folder);
+                            };
+                            msgbox.title = qsTr("Done");
+                            msgbox.text = qsTr("Video was succesfully extracted. Do you want to open the folder now?");
+                            msgbox.button1.text = qsTr("Close");
+                            msgbox.button1.visible = true;
+                            msgbox.button1.clicked.connect(msgBoxHandler);
+                            msgbox.button2.text = qsTr("Open folder");
+                            msgbox.button2.visible = true;
+                            msgbox.button2.focus = true;
+                            msgbox.button2.clicked.connect(msgBoxHandlerOpen);
+                            msgbox.open();
                         }
                     }
 
@@ -517,6 +612,20 @@ ApplicationWindow {
 
         Page {
             id: mkvtoolnixProgressPage
+            Label {
+                id: extractingLabel
+                width: parent.width
+                text: qsTr("Extracting...");
+                font.pixelSize: 30
+                horizontalAlignment: Text.AlignHCenter
+                y: appwindow.height / 3
+            }
+            ProgressBar {
+                indeterminate: true
+                width: parent.width
+                anchors.top: extractingLabel.bottom
+                anchors.topMargin: 20
+            }
         }
     }
 

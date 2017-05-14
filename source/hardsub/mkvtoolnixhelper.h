@@ -13,6 +13,7 @@ class MKVToolnixHelper : public QObject
     Q_PROPERTY(bool errorLoadingInfo READ errorLoadingInfo WRITE setErrorLoadingInfo NOTIFY errorLoadingInfoChanged)
     Q_PROPERTY(bool resultsReady READ resultsReady WRITE setResultsReady NOTIFY resultsReadyChanged)
     QProcess *mkvinfo;
+    QProcess *mkvmerge;
 // qproperties
 private:
     bool m_loadingInfo = false;
@@ -39,6 +40,9 @@ private slots:
     void handleMkvinfoResults(int exitCode);
     void handleMkvinfoError();
     void handleExtractSubtitlesRequest(QString videoFile, QStringList trackIDs);
+    void handleExtractVideoRequest(QString videoFile, QString saveFile);
+    void handleMkvmergeResults(int exitCode);
+    void handleMkvmergeError();
 
 signals:
     void resultsProcessed(QVariantMap results);
@@ -46,6 +50,13 @@ signals:
     void extractSubtitlesVideoDoesNotExist();
     void extractingSubtitlesStarted();
     void extractingSubtitlesDone(QStringList tempPaths);
+
+    void extractVideo(QString videoFile, QString saveFile);
+    void extractVideoDoesNotExist();
+    void extractVideoDirDoesNotExist();
+    void extractingVideoStarted();
+    void extractingVideoFailed();
+    void extractingVideoSucceeded();
 };
 
 #endif // MKVTOOLNIXHELPER_H
