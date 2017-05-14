@@ -34,9 +34,7 @@ void MKVToolnixHelper::handleExtractVideoRequest(QString videoFile, QString save
         return;
     }
     QFileInfo saveFileHandle(saveFile);
-    qDebug() << saveFile;
     if(!saveFileHandle.absoluteDir().exists()) {
-        qDebug() << saveFileHandle.absoluteDir();
         emit extractVideoDirDoesNotExist();
         return;
     }
