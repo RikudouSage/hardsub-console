@@ -6,7 +6,8 @@ CONFIG += c++11
 SOURCES += main.cpp \
     videohelper.cpp \
     videoconverter.cpp \
-    misctools.cpp
+    misctools.cpp \
+    mkvtoolnixhelper.cpp
 
 RESOURCES += qml.qrc
 
@@ -25,7 +26,8 @@ TRANSLATIONS += localizations/cs_CZ.ts
 HEADERS += \
     videohelper.h \
     videoconverter.h \
-    misctools.h
+    misctools.h \
+    mkvtoolnixhelper.h
 
 lupdate_only {
     SOURCES += ./*.qml

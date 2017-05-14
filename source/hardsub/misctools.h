@@ -16,14 +16,16 @@ class MiscTools : public QObject
 public:
     MiscTools();
     ~MiscTools();
-    Q_INVOKABLE void openDirectory(QString dir);
+    Q_INVOKABLE void openDirectory(const QString dir) const;
     Q_INVOKABLE void checkNewVersion();
+    Q_INVOKABLE bool binaryExists(const QString binary) const;
+    Q_INVOKABLE bool moveFile(QString from, QString to);
 
 private:
-    const QString getVersion();
-    const QString getVersionCheckURL();
-    const QString getFilePrefix();
-    const QString getReleasesURL();
+    const QString getVersion() const;
+    const QString getVersionCheckURL() const;
+    const QString getFilePrefix() const;
+    const QString getReleasesURL() const;
 
 private slots:
     void handleVersionCheck(QNetworkReply *reply);
