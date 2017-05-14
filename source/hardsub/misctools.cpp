@@ -36,7 +36,7 @@ void MiscTools::openDirectory(const QString dir) const {
 }
 
 const QString MiscTools::getVersion() const {
-    return "2.1.1";
+    return "2.2.0";
 }
 
 const QString MiscTools::getVersionCheckURL() const {
