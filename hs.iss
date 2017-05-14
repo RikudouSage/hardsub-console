@@ -1,4 +1,4 @@
-#define MyAppName "Hardsub Konzole"
+#define MyAppName "Hardsub Console"
 #define MyAppVersion "2.2.0"
 #define MyAppPublisher "Hokage.cz"
 #define MyAppURL "http://hokage.cz"
@@ -17,7 +17,7 @@ DefaultDirName={pf}\{#MyAppPublisher}\{#MyAppName}
 UninstallDisplayIcon={app}\icon.ico
 DisableProgramGroupPage=yes
 OutputDir={#SourceDir}
-OutputBaseFilename=HardsubKonzole
+OutputBaseFilename=HardsubConsole_{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 AllowNoIcons=yes

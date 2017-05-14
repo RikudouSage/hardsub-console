@@ -3,6 +3,6 @@
 !/bin/ffmpeg.exe
 !/bin/fonts/fonts.conf
 !/bin/mkv*.exe
-/HardsubKonzole.exe
+/HardsubConsole_*.exe
 /source/build-*
 /source/hardsub/*.pro.user
