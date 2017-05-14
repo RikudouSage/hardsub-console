@@ -113,8 +113,22 @@ void MKVToolnixHelper::getTracksInfo(const QString file) {
     setResultsReady(false);
     setErrorLoadingInfo(false);
     setLoadingInfo(true);
+    QProcess mkvinfoLngCheck;
+    mkvinfoLngCheck.start("mkvinfo", QStringList() << "--ui-language" << "list");
+    mkvinfoLngCheck.waitForFinished(1500);
+    QString stdOut = mkvinfoLngCheck.readAllStandardOutput();
+    QString lng;
+    if(stdOut.indexOf("en_US ") > -1) {
+        lng = "en_US";
+    } else if(stdOut.indexOf("en ") > -1) {
+        lng = "en";
+    } else {
+        setLoadingInfo(false);
+        setErrorLoadingInfo(true);
+        return;
+    }
     QStringList args;
-    args << "--ui-language" << "en";
+    args << "--ui-language" << lng;
     args << file;
     mkvinfo->start("mkvinfo", args);
 }
