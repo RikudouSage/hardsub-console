@@ -310,7 +310,15 @@ ApplicationWindow {
                             enabled: mkvToolnixResults.subtitlesCount > 0
                             text: qsTr("Extract subtitles")
                             onClicked: {
-                                mkvhelper.extractSubtitles(mkvSourceFile.text, [2]);
+                                var trackIDS = [];
+                                for(var i in mkvToolnixResults.results) {
+                                    var result = mkvToolnixResults.results[i];
+                                    if(result.type == "subtitles") {
+                                        trackIDS.push(result.id);
+                                    }
+                                }
+                                mkvhelper.extractSubtitles(mkvSourceFile.text, trackIDS);
+                                swipeView.setCurrentIndex(cPAGE_MKV_PROGRESS);
                             }
                         }
                         Button {
@@ -456,6 +464,7 @@ ApplicationWindow {
                                     msgbox.button1.visible = false;
                                     msgbox.button2.clicked.disconnect(msgBoxHandlerOpen);
                                     msgbox.button2.visible = false;
+                                    swipeView.setCurrentIndex(cPAGE_MKVTOOLS);
                                 };
                                 var msgBoxHandlerOpen = function() {
                                     msgBoxHandler();
@@ -476,6 +485,7 @@ ApplicationWindow {
                                     msgbox.close();
                                     msgbox.button1.clicked.disconnect(msgBoxHandler);
                                     msgbox.button1.visible = false;
+                                    swipeView.setCurrentIndex(cPAGE_MKVTOOLS);
                                 };
                                 msgbox.title = qsTr("Error");
                                 msgbox.text = qsTr("Could not extract subtitles. Make sure the target directory exists and does not contain a file with same name.");;

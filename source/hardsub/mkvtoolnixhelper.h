@@ -14,11 +14,18 @@ class MKVToolnixHelper : public QObject
     Q_PROPERTY(bool resultsReady READ resultsReady WRITE setResultsReady NOTIFY resultsReadyChanged)
     QProcess *mkvinfo;
     QProcess *mkvmerge;
+    QProcess *subtitlesProcess = new QProcess(this);
 // qproperties
 private:
     bool m_loadingInfo = false;
     bool m_errorLoadingInfo = false;
     bool m_resultsReady = false;
+    int m_totalSubtitlesTracks = 0;
+    int m_currentSubtitleTrack = 0;
+    QStringList m_subtitleTracks;
+    QString m_currentSubtitleFilename;
+    QString m_currentVideoFile;
+    QStringList m_currentTrackIDs;
 public:
     bool loadingInfo();
     void setLoadingInfo(bool loading);
@@ -43,6 +50,8 @@ private slots:
     void handleExtractVideoRequest(QString videoFile, QString saveFile);
     void handleMkvmergeResults(int exitCode);
     void handleMkvmergeError();
+    void handleSubtitlesResult();
+    //void handleSubtitlesError();
 
 signals:
     void resultsProcessed(QVariantMap results);

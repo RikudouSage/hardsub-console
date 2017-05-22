@@ -15,6 +15,9 @@ MKVToolnixHelper::MKVToolnixHelper() {
     connect(mkvmerge, SIGNAL(finished(int)), this, SLOT(handleMkvmergeResults(int)));
     connect(mkvmerge, SIGNAL(error(QProcess::ProcessError)), this, SLOT(handleMkvmergeError()));
 
+    connect(subtitlesProcess, SIGNAL(finished(int)), this, SLOT(handleSubtitlesResult()));
+    //connect(subtitlesProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(handleSubtitlesError()));
+
     connect(this, &MKVToolnixHelper::extractSubtitles, this, &MKVToolnixHelper::handleExtractSubtitlesRequest);
     connect(this, &MKVToolnixHelper::extractVideo, this, &MKVToolnixHelper::handleExtractVideoRequest);
 }
@@ -50,22 +53,38 @@ void MKVToolnixHelper::handleExtractSubtitlesRequest(QString videoFile, QStringL
         emit extractSubtitlesVideoDoesNotExist();
         return;
     }
-    emit extractingSubtitlesStarted();
-    int i = 0;
-    QStringList result;
-    foreach (QString trackID, trackIDs) {
-        QProcess process;
-        QStringList arguments;
-        QString filename(QDir::tempPath()+"/hardsub_subtitles"+QString::number(i));
-        arguments << "tracks" << videoFile << trackID+":"+filename;
-        process.start("mkvextract", arguments);
-        process.waitForFinished();
-        if(process.exitCode() == QProcess::NormalExit) {
-            result << filename;
-        }
-        i++;
+
+    m_currentVideoFile = videoFile;
+    m_currentTrackIDs = trackIDs;
+
+    m_totalSubtitlesTracks = trackIDs.length();
+
+    if(m_currentSubtitleTrack == 0) {
+        emit extractingSubtitlesStarted();
     }
-    emit extractingSubtitlesDone(result);
+
+    QString trackID = trackIDs.at(m_currentSubtitleTrack);
+
+    QStringList arguments;
+    m_currentSubtitleFilename = QString(QDir::tempPath()+"/hardsub_subtitles"+QString::number(m_currentSubtitleTrack));
+    arguments << "tracks" << videoFile << trackID+":"+m_currentSubtitleFilename;
+    subtitlesProcess->start("mkvextract", arguments);
+}
+
+void MKVToolnixHelper::handleSubtitlesResult() {
+    m_subtitleTracks << m_currentSubtitleFilename;
+    m_currentSubtitleTrack++;
+    if(m_currentSubtitleTrack == m_totalSubtitlesTracks) {
+        emit extractingSubtitlesDone(m_subtitleTracks);
+        m_totalSubtitlesTracks = 0;
+        m_currentSubtitleTrack = 0;
+        m_subtitleTracks = QStringList();
+        m_currentSubtitleFilename = QString();
+        m_currentVideoFile = QString();
+        m_currentTrackIDs = QStringList();
+    } else {
+        handleExtractSubtitlesRequest(m_currentVideoFile, m_currentTrackIDs);
+    }
 }
 
 void MKVToolnixHelper::handleMkvinfoResults(int exitCode) {
