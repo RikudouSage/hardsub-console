@@ -45,7 +45,7 @@ ApplicationWindow {
     }
 
     Label {
-        text: "Hokage.cz - 2017"
+        text: "Dominik Chrástecký - 2017"
         font.pixelSize: 12
         color: Material.color(Material.Grey)
         anchors.right: parent.right
